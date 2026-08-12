@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Level(models.Model):
@@ -62,3 +63,14 @@ class Link(models.Model):
     link4 = models.CharField(max_length=200, default='', blank=True)
     url_link4 = models.URLField(blank=True)
     file = models.ForeignKey('File', null=True, on_delete=models.CASCADE)
+
+class UserProgress(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='progress')
+    subtopic = models.ForeignKey('SubTopic', on_delete=models.CASCADE)
+    completed_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ('user', 'subtopic')
+        
+    def __str__(self):
+        return f"{self.user.username} - {self.subtopic.sub_topic}"
